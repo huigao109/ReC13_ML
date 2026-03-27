@@ -19,35 +19,6 @@ close all;clear;clc;
  lon3=longitude(in3);
  lat3=latitude(in3);
  nsta3=unique(station(in3));
- 
-% figure
-% % axes('position', [0.15 0.02 0.98 0.92])       
-% axes('position', [0.05 0.05 0.89 0.89])       
-% % base map
-% % m_proj('lambert','lons',[-70 25],'lat',[-80 10]);
-% % m_proj('Equidistant cylindrical','lons',[-60 30],'lat',[-80 10]);
-% m_proj('Equidistant cylindrical','lons',[-100 30],'lat',[-85 85]);
-% [cs,h]=m_etopo2('contourf',[-7000:50:0],'edgecolor','none');
-% m_coast('patch',[.8 .8 .8],'edgecolor','none');
-% m_grid('box','fancy','tickdir','in','linest','--','xaxislocation','top',...
-%     'Linewidth',1.5,'layer','top','Fontsize',20,'Fontname','Times New Roman');
-% caxis([-6000 000]);
-% c=colorbar('Fontsize',18,'Fontname','Times New Roman');
-% set(get(c,'label'),'string','Depth (m)','Fontname','Times New Roman','fontsize',20)
-% % ax=gca; depthmap = colormap(ax);
-% % save('depthmap','depthmap');
-% load depthmap;
-% colormap(depthmap);
-% % colormap(m_colmap('blues')); 
-% hold on;
-% m_plot(lon1,lat1,'ko','MarkerSize',3,'MarkerEdgeColor','k','MarkerFaceColor','k')
-% % m_plot(lon2,lat2,'ro','MarkerSize',3,'MarkerEdgeColor','r','MarkerFaceColor','r') 
-% m_plot(lon3,lat3,'ro','MarkerSize',1.5,'MarkerEdgeColor','r','MarkerFaceColor','r') 
-% hold off
-% set(gcf,'PaperUnits','inches','PaperPosition',[0 0 7.5 7.8])
-% %  saveas(gcf,['./NAmap.tif']);
-%  % print(gcf,'-dtiff','-r300','stationsmap_withC13_dep2000'); 
-
 syr=year(in1);
 start_yr=min(syr);
 yr=start_yr;
@@ -69,7 +40,6 @@ end
 % set(gcf,'PaperUnits','inches','PaperPosition',[0 0 6 5])
 % % print(gcf,'-dtiff','-r300','Number of samples per year');
 
-
 slat=sort(lat1);
 start_lat=min(slat);
 nlat=floor(start_lat);
@@ -89,7 +59,6 @@ end
 % set(gcf,'PaperUnits','inches','PaperPosition',[0 0 6 5])
 % % print(gcf,'-dtiff','-r300','Number of samples per latitude');
 
-
 %%
 figure
 axes('position', [0.065 0.02 0.42 0.95])       
@@ -105,8 +74,6 @@ caxis([-6000 000]);
 c=colorbar('Fontsize',15,'Fontname','Times New Roman');
 % set(get(c,'label'),'string','Depth (m)','Fontname','Times New Roman','fontsize',15)
 set(get(c,'title'),'string','Depth (m)','Fontname','Times New Roman','fontsize',15)
-% ax=gca; depthmap = colormap(ax);
-% save('depthmap','depthmap');
 load depthmap;
 colormap(depthmap);
 % colormap(m_colmap('blues')); 
