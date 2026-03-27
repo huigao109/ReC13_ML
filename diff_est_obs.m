@@ -160,7 +160,7 @@ set(gca,'Fontsize',12,'XLim',[-60 65],'YLim',[0 6000],'Fontname','Times New Roma
 xlabel('Latitude','Fontsize',14,'Fontname','Times New Roman');
 
 set(gcf,'PaperUnits','inches','PaperPosition',[0 0 9 5.6])
-print(gcf, '-dtiff', '-r600', 'Fig4_diff_est_obs.tiff');
+print(gcf, '-dtiff', '-r600', 'Fig_diff_est_obs.tiff');
 %%
 mean(pre_test-Y_test)
 std(pre_test-Y_test)
