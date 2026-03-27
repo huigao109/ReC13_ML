@@ -1,7 +1,5 @@
 close all;clear;clc;
 
-% load data
-%  load('D:\carbon\North_Atlantic\Machine_Learning\Atlantic_c13_all_cruises.mat')
  load('Atlantic_cruises_with_c13.mat')
 
  [cruiseno,cruisename] = grp2idx(expocode);
@@ -59,7 +57,6 @@ c13(c13f~=2 & c13f~=6)=NaN;
 
 % training dataset
 alldata.vars=[longitude, latitude, depth, temperature, salinity, aou, nitrate, silicate, tco2, xco2, c13];
-% alldata.vars=[longitude, latitude, depth, temperature, salinity, nitrate, silicate, tco2, talk, xco2, c13];
 a = double(alldata.vars);
 a(a<-900) = nan;
 alldata.vars = a;
@@ -114,6 +111,6 @@ lm_i = fitlm(pre_test, Y_test);
 %     'Y_test', 'pre_test','Y_pred_test', 'Y_std_test', 'mu_test', 'sigma_test', 'ci_test', ...
 %     'lm_i', 'mu', 'sigma', '-v7.3');
 
-save('pred_eff_v5.mat', ...
+save('pred_eff.mat', ...
     'trainedModel', 'validationRMSE', 'validationPredictions', ...
     'lm_i', 'mu', 'sigma', '-v7.3');
