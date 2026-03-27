@@ -73,7 +73,7 @@ Y_test = targets(crno == 25 | crno == 28, :);
 mf = matfile('pred_eff_fin.mat');
 pre_test = mf.pre_test; 
 % Y_test=mf.Y_test;
-%% %% --- figure layout ---
+
 fig = figure('Units','inches','Position',[1 1 9 6]);
 
 left_margin = 0.05; right_margin = 0.17; top_margin = 0.05; btm_margin = 0.10;
