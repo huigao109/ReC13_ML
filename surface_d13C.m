@@ -1,28 +1,22 @@
 close all; clear; clc;
 
-% 加载数据
-% load('GLODAPv2.2023_Atlantic_Ocean_with_ReC13.mat');
 load('GLODAPv2.2023_Atlantic_Ocean.mat')
 load('reconstruceted_c13_GLODAPv2.2023.mat')
 
 ReC13=reconstructed_c13;
 ReC13f=reconstructed_c13f;
 
-% 只选表层数据
 depth_thres = 10;
 lat_bins = -80:5:80;
 lat_centers = lat_bins(1:end-1)+2.5;
 
-% 设定年代分段
 decades = {'1980s', '1990s', '2000s', '2010s'};
 year_ranges = [1980 1990; 1990 2000; 2000 2010; 2010 2020];
 colors = lines(4);
 
-% 限制在表层
 valid_obs = find(~isnan(G2c13) & (G2c13f==2 | G2c13f==6) & G2depth<=10);
 valid_pred = find(~isnan(ReC13) & ReC13f==2 & G2depth<=10);
 
-%% 第一个子图：每5°纬度样本数分布（柱状图）
 figure
 % Count per decade and lat bin
 obs_counts = zeros(4, length(lat_centers));
@@ -55,27 +49,23 @@ for d = 1:4
     end
 end
 
-% 假设obs_counts和pred_counts是4行（年代）×N列（纬度）的矩阵
-obs_stack = obs_counts';   % 转置为 [n_bins, 4]
-pred_stack = pred_counts'; % 转置为 [n_bins, 4]
+obs_stack = obs_counts';   
+pred_stack = pred_counts'; 
 
-n_bins = size(obs_stack, 1);  % 纬度区间数量
+n_bins = size(obs_stack, 1);  
 
-bar_width = 0.3;               % 更窄的柱宽
-intra_gap = 0.3;               % 同一纬度内两柱间距（紧凑）
-inter_gap = 1;               % 相邻纬度间的间距（稀疏）
-
-% 计算x位置：同一纬度内紧凑，不同纬度间稀疏
+bar_width = 0.3;         
+intra_gap = 0.3;           
+inter_gap = 1;           
 x_positions = (0:n_bins-1) * (2*bar_width + intra_gap + inter_gap);
-x_obs = x_positions;                  % 观测数据x位置
-x_pred = x_positions + bar_width + intra_gap;  % 重构数据x位置（与观测紧凑排列）
+x_obs = x_positions;               
+x_pred = x_positions + bar_width + intra_gap;  
 
 axes('position', [0.09 0.7 0.88 0.28])
 hold on; box on; grid on;
 
-% 绘制观测的堆叠柱
 h_obs = bar(x_obs, obs_stack, 'stacked', ...
-    'BarWidth', bar_width, ...  % 设置柱宽
+    'BarWidth', bar_width, ...  
     'EdgeColor', 'none', ...
     'FaceColor', 'flat'); 
 
@@ -83,18 +73,17 @@ for i = 1:4
     h_obs(i).CData = colors(i,:);
 end
 
-% 绘制重构的堆叠柱
 h_pred = bar(x_pred, pred_stack, 'stacked', ...
-    'BarWidth', bar_width, ...  % 设置柱宽
+    'BarWidth', bar_width, ...  
     'EdgeColor', 'k', ...
     'FaceColor', 'flat', ...
     'FaceAlpha', 0.3);  
 for i = 1:length(h_pred)
-    h_pred(i).LineWidth = 1.5;  % 设置边框宽度为1.5
+    h_pred(i).LineWidth = 1.5; 
 end
 
 for i = 1:4
-    h_pred(i).CData = colors(i,:);  % 保持同年代颜色一致
+    h_pred(i).CData = colors(i,:); 
 end
 
 % hatchfill(h_pred(i),'cross','HatchAngle',45,'HatchDensity',30);
@@ -104,15 +93,12 @@ xticks([ ]);
 % xlabel('Latitude (°)', 'FontSize', 14);
 ylabel('Sample Count', 'FontSize', 14);
 
-% 图例
 legend_items = { ...
     '1980s Observed', '1990s Observed', '2000s Observed', '2010s Observed', ...
     '1980s Reconstructed', '1990s Reconstructed', '2000s Reconstructed', '2010s Reconstructed' ...
 };
 h_legend=legend(legend_items, 'Location', 'northwest', 'FontSize', 12, 'FontName', 'Times New Roman','NumColumns',2);
-h_legend.ItemTokenSize = [10, 10]; % [width, height] 单位为像素
-
-% % 优化显示
+h_legend.ItemTokenSize = [10, 10];
 
  axis tight;
 
@@ -121,25 +107,18 @@ text(-5.2,650,'(a)','FontSize', 20, 'FontName', 'Times New Roman')
 
 %%
 % figure('Position', [100, 100, 1000, 900]);
-% 第一个主图：δ13C随纬度变化
 axes('position', [0.09 0.40 0.88 0.28])
 hold on
 for d = 1:length(decades)
-    % 年代范围
     decade_start = 1980 + (d-1)*10;
     decade_end = decade_start + 10;
-
-    % 筛选观测和预测数据
     idx_obs = valid_obs(G2year(valid_obs) >= decade_start & G2year(valid_obs) < decade_end);
     idx_pred = valid_pred(G2year(valid_pred) >= decade_start & G2year(valid_pred) < decade_end);
-
-    % 散点图（o）
     scatter(G2latitude(idx_obs), G2c13(idx_obs), 10, colors(d,:), 's', ...
         'filled', 'MarkerFaceAlpha', 0.25, 'DisplayName', [decades{d} ' Observed']);
     scatter(G2latitude(idx_pred), ReC13(idx_pred), 10, colors(d,:), 's', ...
         'MarkerEdgeAlpha', 0.25, 'DisplayName', [decades{d} ' Reconstructed']);
 
-    % 计算每 5° 纬度平均值和标准差
     obs_avg = nan(1, length(lat_centers));
     obs_std = nan(1, length(lat_centers));
     pred_avg = nan(1, length(lat_centers));
@@ -149,14 +128,12 @@ for d = 1:length(decades)
         lat_min = lat_bins(i);
         lat_max = lat_bins(i+1);
 
-        % 观测
         idx_lat_obs = idx_obs(G2latitude(idx_obs) >= lat_min & G2latitude(idx_obs) < lat_max);
         if ~isempty(idx_lat_obs)
             obs_avg(i) = mean(G2c13(idx_lat_obs));
             obs_std(i) = std(G2c13(idx_lat_obs));
         end
 
-        % 重构
         idx_lat_pred = idx_pred(G2latitude(idx_pred) >= lat_min & G2latitude(idx_pred) < lat_max);
         if ~isempty(idx_lat_pred)
             pred_avg(i) = mean(ReC13(idx_lat_pred));
@@ -164,7 +141,6 @@ for d = 1:length(decades)
         end
     end
 
-    % 画 errorbar 平均值（^ 和 d）
     h1 = errorbar(lat_centers, obs_avg, obs_std, '^', ...
         'Color', 'k', 'MarkerFaceColor', colors(d,:), ...
         'MarkerSize', 6, 'CapSize', 5, 'MarkerEdgeColor', 'k', ...
@@ -175,12 +151,10 @@ for d = 1:length(decades)
         'MarkerSize', 6, 'CapSize', 5, 'MarkerEdgeColor', 'k', ...
         'LineWidth', 1.2, 'DisplayName', [decades{d} ' Rec Mean ± SD']);
 
-    % 叠加在最上层
     uistack(h1, 'top');
     uistack(h2, 'top');
 end
 
-% 图形美化
 xlim([-80 80]);
 ylim([-0.5 2.5]);
 xticks(-80:10:80);
@@ -191,8 +165,6 @@ grid on;
 box on;
 set(gca, 'FontSize', 14, 'FontName', 'Times New Roman');
 text(-93,2.5,'(b)','FontSize', 20, 'FontName', 'Times New Roman')
-
-%% 第三个子图：KDE 图
 
 axes('position', [0.09 0.06 0.88 0.28])
 hold on
@@ -222,6 +194,5 @@ grid on; box on
 set(gca, 'FontSize', 14, 'FontName', 'Times New Roman')
 text(-0.805,2,'(c)','FontSize', 20, 'FontName', 'Times New Roman')
 
-% 保存图像
 set(gcf,'PaperUnits','inches','PaperPosition',[0 0 10 12])
-print(gcf,'-dtiff','-r300','Fig8_C13_Latitude_and_Distributions');
+print(gcf,'-dtiff','-r300','Fig_C13_Latitude_and_Distributions');
