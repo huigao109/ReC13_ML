@@ -1,8 +1,6 @@
 close all;clear;clc;
 
 % load data
-%  load('D:\carbon\North_Atlantic\Machine_Learning\Atlantic_c13_all_cruises.mat')
- % load('F:\North_Atlantic\Machine_Learning\Atlantic_c13_all_cruises.mat')
  load('Atlantic_cruises_with_c13.mat')
 
  [cruiseno,cruisename] = grp2idx(expocode);
@@ -53,7 +51,6 @@ c13(c13f~=2 & c13f~=6)=NaN;
 
 % training dataset
 alldata.vars=[longitude, latitude, depth, temperature, salinity, aou, nitrate, silicate, tco2, xco2, c13];
-% alldata.vars=[longitude, latitude, depth, temperature, salinity, nitrate, silicate, tco2, talk, xco2, c13];
 a = double(alldata.vars);
 a(a<-900) = nan;
 alldata.vars = a;
@@ -81,7 +78,7 @@ u_DIC=2;
 u_AOU=2;
 u_xCO2=0.2;
 
-load('pred_eff_v5.mat')
+load('pred_eff.mat')
 
 %%
 % Test temperature sensitivity
@@ -90,8 +87,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_T,size(X_train,1),1);
     T_all_i(:,4) = X_train(:,4) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_T(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_T_avg = nanstd(diff_c13_T,0,2);
@@ -104,8 +101,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_S,size(X_train,1),1);
     T_all_i(:,5) = X_train(:,5) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_S(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_S_avg = nanstd(diff_c13_S,0,2);
@@ -118,8 +115,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_AOU,size(X_train,1),1);
     T_all_i(:,6) = X_train(:,6) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_AOU(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_AOU_avg = nanstd(diff_c13_AOU,0,2);
@@ -132,8 +129,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_N,size(X_train,1),1);
     T_all_i(:,7) = X_train(:,7) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_N(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_N_avg = nanstd(diff_c13_N,0,2);
@@ -146,8 +143,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_Si,size(X_train,1),1);
     T_all_i(:,8) = X_train(:,8) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_Si(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_Si_avg = nanstd(diff_c13_Si,0,2);
@@ -160,8 +157,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_DIC,size(X_train,1),1);
     T_all_i(:,9) = X_train(:,9) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_DIC(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_DIC_avg = nanstd(diff_c13_DIC,0,2);
@@ -174,8 +171,8 @@ for itest = 1:N_test
     T_all_i = X_train;
     ei = normrnd(0,u_xCO2,size(X_train,1),1);
     T_all_i(:,10) = X_train(:,10) + ei;
-    [X_train, mu, sigma] = zscore(X_train);
-    y_test_1 = trainedModel.predictFcn(X_train);
+    [T_all_i_std, mu, sigma] = zscore(T_all_i);
+    y_test_1 = trainedModel.predictFcn(T_all_i_std);
     diff_c13_xCO2(:,itest) = y_test_1 - validationPredictions;
 end
 diff_c13_xCO2_avg = nanstd(diff_c13_xCO2,0,2);
@@ -197,5 +194,3 @@ mean(diff_c13_Si_avg)
 mean(diff_c13_DIC_avg)
 mean(diff_c13_AOU_avg)
 mean(diff_c13_xCO2_avg)
-
-
